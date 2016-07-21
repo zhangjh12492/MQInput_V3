@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ExchangeConf">
+    <typeAlias alias="ExchangeConf" type="com.wfj.mq.entity.ExchangeConf"/>
+
+    <sql id="qrySelect">
+        select sid sid,
+			exchange_name exchangeName,
+			exchange_desc exchangeDesc,
+			exchange_type exchangeType,
+			status status
+    </sql>
+
+    <select id="selectById" resultClass="ExchangeConf">
+        <include refid="qrySelect"/>
+        from exchange_conf
+        where
+        sid=#sid#
+    </select>
+
+    <insert id="insert">
+        <selectKey resultClass="int" keyProperty="keykey">
+            select LAST_INSERT_ID() AS keykey
+        </selectKey>
+        insert into exchange_conf (
+            	sid,
+			exchange_name,
+			exchange_desc,
+			exchange_type,
+			status
+            ) values (
+        	#sid#,
+			#exchangeName#,
+			#exchangeDesc#,
+			#exchangeType#,
+			#status#
+        )
+    </insert>
+
+    <update id="updateById">
+        update exchange_conf
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="exchangeDesc">
+                exchange_desc=#exchangeDesc#
+            </isNotNull>
+            <isNotNull prepend="," property="exchangeType">
+                exchange_type=#exchangeType#
+            </isNotNull>
+            <isNotNull prepend="," property="status">
+                status=#status#
+            </isNotNull>
+            <isNotNull prepend="," property="exchangeName">
+                exchange_name=#exchangeName#
+            </isNotNull>
+            <isNotNull prepend="," property="sid">
+                sid=#sid#
+            </isNotNull>
+        </dynamic>
+        where sid=#sid#
+    </update>
+
+    <delete id="deleteById">
+        delete from exchange_conf where sid=#sid#
+    </delete>
+
+
+    <sql id="dynamicWhere">
+        <dynamic prepend="where">
+            <isPropertyAvailable property="exchangeDesc">
+                <isNotEmpty prepend="and" property="exchangeDesc">
+                    exchange_desc=#exchangeDesc#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="exchangeType">
+                <isNotEmpty prepend="and" property="exchangeType">
+                    exchange_type=#exchangeType#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="status">
+                <isNotEmpty prepend="and" property="status">
+                    status=#status#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="exchangeName">
+                <isNotEmpty prepend="and" property="exchangeName">
+                    exchange_name=#exchangeName#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="sid">
+                <isNotEmpty prepend="and" property="sid">
+                    sid=#sid#
+                </isNotEmpty>
+            </isPropertyAvailable>
+        </dynamic>
+    </sql>
+
+    <sql id="dynamicOrderBy">
+        <isPropertyAvailable property="orderBy">
+            <isNotEmpty prepend=" order by " property="orderBy">
+                $orderBy$
+            </isNotEmpty>
+        </isPropertyAvailable>
+    </sql>
+
+    <select id="selectByCond" resultClass="ExchangeConf">
+        <include refid="qrySelect"/>
+        from exchange_conf
+        <include refid="dynamicWhere"/>
+        <include refid="dynamicOrderBy"/>
+    </select>
+
+    <select id="selectCountByCond" resultClass="Integer">
+        select count(1) as kk
+        from exchange_conf
+        <include refid="dynamicWhere"/>
+    </select>
+
+</sqlMap>

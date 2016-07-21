@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ServerConf">
+    <typeAlias alias="ServerConf" type="com.wfj.mq.entity.ServerConf"/>
+
+    <sql id="qrySelect">
+        select sid sid,
+			group_sid groupSid,
+			server_ip serverIp,
+			server_port serverPort
+    </sql>
+
+    <select id="selectById" resultClass="ServerConf">
+        <include refid="qrySelect"/>
+        from server_conf
+        where
+        sid=#sid#
+    </select>
+
+    <insert id="insert">
+        <selectKey resultClass="int" keyProperty="keykey">
+            select LAST_INSERT_ID() AS keykey
+        </selectKey>
+        insert into server_conf (
+            	sid,
+			group_sid,
+			server_ip,
+			server_port
+            ) values (
+        	#sid#,
+			#groupSid#,
+			#serverIp#,
+			#serverPort#
+        )
+    </insert>
+
+    <update id="updateById">
+        update server_conf
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="serverPort">
+                server_port=#serverPort#
+            </isNotNull>
+            <isNotNull prepend="," property="serverIp">
+                server_ip=#serverIp#
+            </isNotNull>
+            <isNotNull prepend="," property="groupSid">
+                group_sid=#groupSid#
+            </isNotNull>
+            <isNotNull prepend="," property="sid">
+                sid=#sid#
+            </isNotNull>
+        </dynamic>
+        where sid=#sid#
+    </update>
+
+    <delete id="deleteById">
+        delete from server_conf where sid=#sid#
+    </delete>
+
+
+    <sql id="dynamicWhere">
+        <dynamic prepend="where">
+            <isPropertyAvailable property="serverPort">
+                <isNotEmpty prepend="and" property="serverPort">
+                    server_port=#serverPort#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="serverIp">
+                <isNotEmpty prepend="and" property="serverIp">
+                    server_ip=#serverIp#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="groupSid">
+                <isNotEmpty prepend="and" property="groupSid">
+                    group_sid=#groupSid#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="sid">
+                <isNotEmpty prepend="and" property="sid">
+                    sid=#sid#
+                </isNotEmpty>
+            </isPropertyAvailable>
+        </dynamic>
+    </sql>
+
+    <sql id="dynamicOrderBy">
+        <isPropertyAvailable property="orderBy">
+            <isNotEmpty prepend=" order by " property="orderBy">
+                $orderBy$
+            </isNotEmpty>
+        </isPropertyAvailable>
+    </sql>
+
+    <select id="selectByCond" resultClass="ServerConf">
+        <include refid="qrySelect"/>
+        from server_conf
+        <include refid="dynamicWhere"/>
+        <include refid="dynamicOrderBy"/>
+    </select>
+
+    <select id="selectCountByCond" resultClass="Integer">
+        select count(1) as kk
+        from server_conf
+        <include refid="dynamicWhere"/>
+    </select>
+
+    <select id="getGroupList" resultClass="ServerConf">
+        select distinct group_sid groupSid
+        from server_conf
+    </select>
+
+</sqlMap>

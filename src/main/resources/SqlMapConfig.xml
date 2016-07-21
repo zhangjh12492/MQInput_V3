@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+        "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+    <settings useStatementNamespaces="true"/>
+    <sqlMap resource="com/wfj/mq/mapper/ExchangeConf.xml"/>
+    <sqlMap resource="com/wfj/mq/mapper/GroupConf.xml"/>
+    <sqlMap resource="com/wfj/mq/mapper/InboundConf.xml"/>
+    <sqlMap resource="com/wfj/mq/mapper/InboundQueueRef.xml"/>
+    <sqlMap resource="com/wfj/mq/mapper/MessageLog.xml"/>
+    <sqlMap resource="com/wfj/mq/mapper/QueueConf.xml"/>
+    <sqlMap resource="com/wfj/mq/mapper/ServerConf.xml"/>
+    <sqlMap resource="com/wfj/mq/mapper/TxInfo.xml"/>
+    <sqlMap resource="com/wfj/mq/mapper/TxInfoLog.xml"/>
+</sqlMapConfig>

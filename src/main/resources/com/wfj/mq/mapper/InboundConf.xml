@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="InboundConf">
+    <typeAlias alias="InboundConf" type="com.wfj.mq.entity.InboundConf"/>
+
+    <sql id="qrySelect">
+        select sid sid,
+			system_no systemNo,
+			service_no serviceNo,
+			exchange_type exchangeType,
+			route_key routeKey,
+			inbound_desc inboundDesc,
+			group_sid groupSid,
+			max_length maxLength,
+			exchange_conf_sid exchangeConfSid
+    </sql>
+
+    <select id="selectById" resultClass="InboundConf">
+        <include refid="qrySelect"/>
+        from inbound_conf
+        where
+        sid=#sid#
+    </select>
+
+    <insert id="insert">
+        <selectKey resultClass="int" keyProperty="keykey">
+            select LAST_INSERT_ID() AS keykey
+        </selectKey>
+        insert into inbound_conf (
+            	sid,
+			system_no,
+			service_no,
+			exchange_type,
+			route_key,
+            inbound_desc,
+			group_sid,
+            max_length,
+            exchange_conf_sid
+            ) values (
+        	#sid#,
+			#systemNo#,
+			#serviceNo#,
+			#exchangeType#,
+			#routeKey#,
+			#inboundDesc#,
+			#groupSid#,
+            #maxLength#,
+            #exchangeConfSid#
+        )
+    </insert>
+
+    <update id="updateById">
+        update inbound_conf
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="routeKey">
+                route_key=#routeKey#
+            </isNotNull>
+            <isNotNull prepend="," property="serviceNo">
+                service_no=#serviceNo#
+            </isNotNull>
+            <isNotNull prepend="," property="inboundDesc">
+                inbound_desc=#inboundDesc#
+            </isNotNull>
+            <isNotNull prepend="," property="exchangeType">
+               exchange_type=#exchangeType#
+            </isNotNull>
+            <isNotNull prepend="," property="groupSid">
+                group_sid=#groupSid#
+            </isNotNull>
+            <isNotNull prepend="," property="systemNo">
+                system_no=#systemNo#
+            </isNotNull>
+            <isNotNull prepend="," property="sid">
+                sid=#sid#
+            </isNotNull>
+            <isNotNull prepend="," property="maxLength">
+                max_length=#maxLength#
+            </isNotNull>
+            <isNotNull prepend="," property="exchangeConfSid">
+                exchange_conf_sid=#exchangeConfSid#
+            </isNotNull>
+        </dynamic>
+        where sid=#sid#
+    </update>
+
+    <delete id="deleteById">
+        delete from inbound_conf where sid=#sid#
+    </delete>
+
+
+    <sql id="dynamicWhere">
+        <dynamic prepend="where">
+            <isPropertyAvailable property="routeKey">
+                <isNotEmpty prepend="and" property="routeKey">
+                    route_key=#routeKey#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="serviceNo">
+                <isNotEmpty prepend="and" property="serviceNo">
+                    service_no=#serviceNo#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="inboundDesc">
+                <isNotEmpty prepend="and" property="inboundDesc">
+                    inbound_desc=#inboundDesc#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="routeType">
+                <isNotEmpty prepend="and" property="exchangeType">
+                    exchange_type=#exchangeType#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="groupSid">
+                <isNotEmpty prepend="and" property="groupSid">
+                    group_sid=#groupSid#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="systemNo">
+                <isNotEmpty prepend="and" property="systemNo">
+                    system_no=#systemNo#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="sid">
+                <isNotEmpty prepend="and" property="sid">
+                    sid=#sid#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="maxLength">
+                <isNotEmpty prepend="and" property="maxLength">
+                    max_length=#maxLength#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="exchangeConfSid">
+                <isNotEmpty prepend="and" property="exchangeConfSid">
+                    exchange_conf_sid=#exchangeConfSid#
+                </isNotEmpty>
+            </isPropertyAvailable>
+        </dynamic>
+    </sql>
+
+    <sql id="dynamicOrderBy">
+        <isPropertyAvailable property="orderBy">
+            <isNotEmpty prepend=" order by " property="orderBy">
+                $orderBy$
+            </isNotEmpty>
+        </isPropertyAvailable>
+    </sql>
+
+    <select id="selectByCond" resultClass="InboundConf">
+        <include refid="qrySelect"/>
+        from inbound_conf
+        <include refid="dynamicWhere"/>
+        <include refid="dynamicOrderBy"/>
+    </select>
+
+    <select id="selectCountByCond" resultClass="Integer">
+        select count(1) as kk
+        from inbound_conf
+        <include refid="dynamicWhere"/>
+    </select>
+
+
+</sqlMap>

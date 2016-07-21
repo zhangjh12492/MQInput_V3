@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="GroupConf">
+    <typeAlias alias="GroupConf" type="com.wfj.mq.entity.GroupConf"/>
+
+    <sql id="qrySelect">
+        select sid sid,
+			group_name groupName,
+			group_desc groupDesc,
+			user_name userName,
+			password password
+    </sql>
+
+    <select id="selectById" resultClass="GroupConf">
+        <include refid="qrySelect"/>
+        from group_conf
+        where
+        sid=#sid#
+    </select>
+
+    <insert id="insert">
+        <selectKey resultClass="int" keyProperty="keykey">
+            select LAST_INSERT_ID() AS keykey
+        </selectKey>
+        insert into group_conf (
+            	sid,
+			group_name,
+			group_desc,
+			user_name,
+			password
+            ) values (
+        	#sid#,
+			#groupName#,
+			#groupDesc#,
+			#userName#,
+			#password#
+        )
+    </insert>
+
+    <update id="updateById">
+        update group_conf
+        <dynamic prepend="set">
+            <isNotNull prepend="," property="groupName">
+                group_name=#groupName#
+            </isNotNull>
+            <isNotNull prepend="," property="userName">
+                user_name=#userName#
+            </isNotNull>
+            <isNotNull prepend="," property="password">
+                password=#password#
+            </isNotNull>
+            <isNotNull prepend="," property="groupDesc">
+                group_desc=#groupDesc#
+            </isNotNull>
+            <isNotNull prepend="," property="sid">
+                sid=#sid#
+            </isNotNull>
+        </dynamic>
+        where sid=#sid#
+    </update>
+
+    <delete id="deleteById">
+        delete from group_conf where sid=#sid#
+    </delete>
+
+
+    <sql id="dynamicWhere">
+        <dynamic prepend="where">
+            <isPropertyAvailable property="groupName">
+                <isNotEmpty prepend="and" property="groupName">
+                    group_name=#groupName#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="userName">
+                <isNotEmpty prepend="and" property="userName">
+                    user_name=#userName#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="password">
+                <isNotEmpty prepend="and" property="password">
+                    password=#password#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="groupDesc">
+                <isNotEmpty prepend="and" property="groupDesc">
+                    group_desc=#groupDesc#
+                </isNotEmpty>
+            </isPropertyAvailable>
+            <isPropertyAvailable property="sid">
+                <isNotEmpty prepend="and" property="sid">
+                    sid=#sid#
+                </isNotEmpty>
+            </isPropertyAvailable>
+        </dynamic>
+    </sql>
+
+    <sql id="dynamicOrderBy">
+        <isPropertyAvailable property="orderBy">
+            <isNotEmpty prepend=" order by " property="orderBy">
+                $orderBy$
+            </isNotEmpty>
+        </isPropertyAvailable>
+    </sql>
+
+    <select id="selectByCond" resultClass="GroupConf">
+        <include refid="qrySelect"/>
+        from group_conf
+        <include refid="dynamicWhere"/>
+        <include refid="dynamicOrderBy"/>
+    </select>
+
+    <select id="selectCountByCond" resultClass="Integer">
+        select count(1) as kk
+        from group_conf
+        <include refid="dynamicWhere"/>
+    </select>
+
+</sqlMap>
